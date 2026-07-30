@@ -1,0 +1,37 @@
+
+@base_url=https://localhost:49329/api/
+@base_url_s=https://localhost:49328/api/
+
+###
+POST {{base_url_s}}chat/async/user1-con1
+Content-Type: application/json
+
+"good job!"
+####
+"What was my last question?"
+
+#### 
+POST {{base_url_s}}chat/streaming/user1-con1
+Content-Type: application/json
+
+"List all my questions so far I have asked, DO NOT add anything else, ONLY my questions"
+###
+"List all my questions so far I have asked, DO NOT add anything else, ONLY my questions"
+"What was my last question?"
+"What's capital of Iran?"
+###
+
+####
+{
+  "history": "Hi"
+}
+
+############ 
+
+GET {{base_url_s}}health/sync
+Content-Type: application/json
+
+#### 
+
+GET {{base_url_s}}health/stream
+Content-Type: application/json

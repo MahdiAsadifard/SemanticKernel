@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".github/copilot-instructions.md" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/Source/">
+    <Project Path="Source/Api/Api.csproj" Id="aeca7f18-6651-40e3-a714-c20c3a775fc5" />
+    <Project Path="Source/Application/Application.csproj" Id="eb15a661-f506-4e67-a3fe-df881c8b50a6" />
+    <Project Path="Source/Domain/Domain.csproj" Id="c7301b5e-181d-4221-b601-0857efc22715" />
+    <Project Path="Source/Infrastructure/Infrastructure.csproj" Id="0334d872-234e-4d1a-ba63-3724eb695a6f" />
+  </Folder>
+  <Folder Name="/Tests/" />
+
+</Solution>
