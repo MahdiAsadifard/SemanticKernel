@@ -6,9 +6,9 @@ namespace Application.Chat
 
     public interface IChatService
     {
-        Task GetChatStreaming(string prompt, string conversationId, HttpResponse response);
+        Task GetChatStreaming(string prompt, string conversationId, HttpResponse response, CancellationToken cancellationToken);
 
-        Task<ChatMessageContent> GetChatMessageAsync(string prompt, string conversationId);
+        Task<ChatMessageContent> GetChatMessageAsync(string prompt, string conversationId, CancellationToken cancellationToken);
 
     }
 }

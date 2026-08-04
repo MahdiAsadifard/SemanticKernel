@@ -1,10 +1,10 @@
 ﻿namespace Infrastructure.SemanticKernel.Extensions
 {
 
+    using Infrastructure.Options;
+    using Infrastructure.SemanticKernel.Helpers;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-
-    using Infrastructure.Options;
     using Microsoft.SemanticKernel;
 
     public static class OllamaServiceExtension
@@ -26,7 +26,9 @@
 
                 services.AddScoped<Kernel>(serviceProvider =>
                 {
-                    return new Kernel(serviceProvider);
+                    var kernel = new Kernel(serviceProvider);
+                    AIHelpers.AddPlugins(kernel);
+                    return kernel;
                 });
 
                 return services;

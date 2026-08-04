@@ -12,6 +12,8 @@
             {
                 services.Configure<OllamaOption>(configuration.GetSection(OllamaOption.SectionName));
                 services.Configure<AICafeHCLOption>(configuration.GetSection(AICafeHCLOption.SectionName));
+                services.Configure<SemanticKernelOptions>(configuration.GetSection(SemanticKernelOptions.SectionName));
+
                 return services;
             }
         }

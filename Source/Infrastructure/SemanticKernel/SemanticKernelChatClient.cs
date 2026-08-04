@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Caching;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
+using System.Runtime.CompilerServices;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -32,26 +33,30 @@ namespace Infrastructure.SemanticKernel
                 };
         }
 
-        public async IAsyncEnumerable<StreamingChatMessageContent> GetChatStreaming(string prompt, string conversationId)
+        public async IAsyncEnumerable<StreamingChatMessageContent> GetChatStreaming(
+            string prompt,
+            string conversationId, 
+            [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(prompt, nameof(prompt));
 
             var conversationHistory = this._memoryCacheStore.GetOrCreate<ChatHistory>(conversationId, _ => new ChatHistory());
             conversationHistory.AddUserMessage(prompt);
 
-            var msg = _chatCompletionService.GetStreamingChatMessageContentsAsync(
+            var messageStream = _chatCompletionService.GetStreamingChatMessageContentsAsync(
                 chatHistory: conversationHistory,
                 kernel: this._kernel,
-                executionSettings: this._promptExecutionSettings);
+                executionSettings: this._promptExecutionSettings,
+                cancellationToken: cancellationToken);
 
-            await foreach (var message in msg)
+            await foreach (var message in messageStream.WithCancellation(cancellationToken))
             {
                 yield return message;
             }
 
         }
 
-        public async Task<ChatMessageContent> GetChatMessageAsync(string prompt, string conversationId)
+        public async Task<ChatMessageContent> GetChatMessageAsync(string prompt, string conversationId, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(prompt, nameof(prompt));
 
@@ -61,7 +66,8 @@ namespace Infrastructure.SemanticKernel
             var result = await _chatCompletionService.GetChatMessageContentAsync(
                 chatHistory: conversationHistory,
                 kernel: this._kernel,
-                executionSettings: this._promptExecutionSettings);
+                executionSettings: this._promptExecutionSettings, 
+                cancellationToken: cancellationToken);
             return result;
         }
     }

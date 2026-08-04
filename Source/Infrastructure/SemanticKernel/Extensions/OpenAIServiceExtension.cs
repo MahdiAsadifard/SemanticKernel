@@ -6,6 +6,7 @@
     using Microsoft.SemanticKernel;
 
     using Infrastructure.Options;
+    using Infrastructure.SemanticKernel.Helpers;
 
     public static class OpenAIServiceExtension
     {
@@ -28,7 +29,9 @@
 
                 services.AddScoped<Kernel>(serviceProvider =>
                 {
-                    return new Kernel(serviceProvider);
+                    var kernel = new Kernel(serviceProvider);
+                    AIHelpers.AddPlugins(kernel);
+                    return kernel;
                 });
 
                 return services;

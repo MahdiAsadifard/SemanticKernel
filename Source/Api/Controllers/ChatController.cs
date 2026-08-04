@@ -1,5 +1,7 @@
 ﻿using Application.Chat;
+using Infrastructure.Options;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Api.Controllers
 {
@@ -7,10 +9,15 @@ namespace Api.Controllers
     {
 
         private readonly IChatService _chatService;
+        private readonly IOptions<SemanticKernelOptions> _kernelOptions;
 
-        public ChatController(IChatService chatService)
+        TimeSpan _requestTimeout;
+
+        public ChatController(IChatService chatService, IOptions<SemanticKernelOptions> kernelOptions)
         {
             this._chatService = chatService;
+            this._kernelOptions = kernelOptions;
+            this._requestTimeout = TimeSpan.FromSeconds(this._kernelOptions.Value.CancellationTokenTimeoutInSeconds);
         }
 
         [HttpPost("streaming/{conversationId}")]
@@ -18,7 +25,8 @@ namespace Api.Controllers
           [FromRoute] string conversationId,
           [FromBody] string prompt)
         {
-            await this._chatService.GetChatStreaming(prompt, conversationId, Response);
+            CancellationToken cts = new CancellationTokenSource(this._requestTimeout).Token;
+            await this._chatService.GetChatStreaming(prompt, conversationId, Response, cts);
         }
 
         [HttpPost("async/{conversationId}")]
@@ -26,7 +34,8 @@ namespace Api.Controllers
             [FromRoute] string conversationId,
             [FromBody] string prompt)
         {
-            var chatMessage = await this._chatService.GetChatMessageAsync(prompt, conversationId);
+            CancellationToken cts = new CancellationTokenSource(this._requestTimeout).Token;
+            var chatMessage = await this._chatService.GetChatMessageAsync(prompt, conversationId, cts);
             return Ok(chatMessage);
         }
     }
