@@ -2,6 +2,7 @@
 {
 
     using Infrastructure.Options;
+    using Infrastructure.SemanticKernel.Filters;
     using Infrastructure.SemanticKernel.Helpers;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,9 @@
                     modelId: options.Model,
                     endpoint: new Uri(options.Endpoint)
                     );
+
+                services.AddSingleton<IFunctionInvocationFilter, LoggingFunctionFilter>();
+                services.AddSingleton<IPromptRenderFilter, PromptRenderFilter>();
 
                 services.AddScoped<Kernel>(serviceProvider =>
                 {

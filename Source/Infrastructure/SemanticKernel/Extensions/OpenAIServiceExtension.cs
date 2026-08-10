@@ -7,6 +7,7 @@
 
     using Infrastructure.Options;
     using Infrastructure.SemanticKernel.Helpers;
+    using Infrastructure.SemanticKernel.Filters;
 
     public static class OpenAIServiceExtension
     {
@@ -26,6 +27,9 @@
                     endpoint: options.Endpoint,
                     apiKey: options.ApiKey
                     );
+
+                services.AddSingleton<IFunctionInvocationFilter, LoggingFunctionFilter>();
+                services.AddSingleton<IPromptRenderFilter, PromptRenderFilter>();
 
                 services.AddScoped<Kernel>(serviceProvider =>
                 {
