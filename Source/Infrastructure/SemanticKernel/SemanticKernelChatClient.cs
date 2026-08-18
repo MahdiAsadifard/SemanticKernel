@@ -49,11 +49,14 @@ namespace Infrastructure.SemanticKernel
                 executionSettings: this._promptExecutionSettings,
                 cancellationToken: cancellationToken);
 
+            StringBuilder assistantMessageBuilder = new();
             await foreach (var message in messageStream.WithCancellation(cancellationToken))
             {
+                if (message is null || string.IsNullOrWhiteSpace(message.Content)) continue;
+                assistantMessageBuilder.Append(message.Content);
                 yield return message;
             }
-
+            conversationHistory.AddAssistantMessage(assistantMessageBuilder.ToString() ?? "LLM wasn't able to generate a response.");
         }
 
         public async Task<ChatMessageContent> GetChatMessageAsync(string prompt, string conversationId, CancellationToken cancellationToken)
@@ -68,6 +71,8 @@ namespace Infrastructure.SemanticKernel
                 kernel: this._kernel,
                 executionSettings: this._promptExecutionSettings, 
                 cancellationToken: cancellationToken);
+
+            conversationHistory.AddAssistantMessage(result.Content ?? "LLM wasn't able to generate a response.");
             return result;
         }
     }

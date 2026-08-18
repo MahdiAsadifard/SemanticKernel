@@ -6,25 +6,24 @@
 POST {{base_url_s}}chat/async/user1-con1
 Content-Type: application/json
 
-"good job!"
-####
 "What was my last question?"
+####
+"How are you?"
+"Turn on the Kitchen Light and show me the result"
+"Give me list of lights"
 
-#### 
+#############
 POST {{base_url_s}}chat/streaming/user1-con1
 Content-Type: application/json
 
-"List all my questions so far I have asked, DO NOT add anything else, ONLY my questions"
+"How are you today?"
 ###
+"Give me list of lights"
+"Hi, there"
 "List all my questions so far I have asked, DO NOT add anything else, ONLY my questions"
 "What was my last question?"
-"What's capital of Iran?"
 ###
 
-####
-{
-  "history": "Hi"
-}
 
 ############ 
 
