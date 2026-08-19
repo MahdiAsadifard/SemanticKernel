@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.VectorData;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace Infrastructure.VectoreStores
 {
@@ -11,16 +9,30 @@ namespace Infrastructure.VectoreStores
             where TKey : notnull
             where TRecord : class;
 
-        Task<bool> CreateCollection<TKey, TRecord>(CancellationToken cancellationToken = default)
+        IAsyncEnumerable<string> GetCollectionNamesStream(CancellationToken cancellationToken = default);
+
+        Task<bool> CreateCollectionAsync<TKey, TRecord>(
+            VectorStoreCollection<TKey, TRecord> collection,
+            CancellationToken cancellationToken = default)
             where TKey : notnull
             where TRecord : class;
 
 
-        Task<bool> IsCollectionExists<TKey, TRecord>(CancellationToken cancellationToken = default)
+        Task<bool> IsCollectionExistsAsync<TKey, TRecord>(
+            CancellationToken cancellationToken = default)
             where TKey : notnull
             where TRecord : class;
 
-        Task<bool> DeleteCollection<TKey, TRecord>(string collectionName, CancellationToken cancellationToken = default)
+        Task<bool> DeleteCollectionAsync<TKey, TRecord>(
+            VectorStoreCollection<TKey, TRecord> collection,
+            CancellationToken cancellationToken = default)
+            where TKey : notnull
+            where TRecord : class;
+
+        Task<bool> UpsertCollectionAsync<TKey, TRecord>(
+            VectorStoreCollection<TKey, TRecord> collection,
+            TRecord record,
+            CancellationToken cancellationToken = default)
             where TKey : notnull
             where TRecord : class;
 
