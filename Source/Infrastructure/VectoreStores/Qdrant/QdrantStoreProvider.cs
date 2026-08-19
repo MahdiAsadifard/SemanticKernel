@@ -43,26 +43,34 @@ namespace Infrastructure.VectoreStores.Qdrant
             where TKey : notnull
             where TRecord : class
         {
-            bool isCollectionCreated = false;
             try
             {
                 VectorStoreCollection<TKey, TRecord> collection = this.GetCollection<TKey, TRecord>(typeof(TRecord).Name);
                 await collection.EnsureCollectionExistsAsync(cancellationToken);
-                isCollectionCreated = true;
+                return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                isCollectionCreated = false;
-                this._logger.LogError("Failed to create collection for {RecordType}", typeof(TRecord).Name);
+                this._logger.LogError(ex, "Failed to create collection for {RecordType}", typeof(TRecord).Name);
             }
-            return isCollectionCreated;
+            return false;
         }
 
-        public async Task DeleteCollection<TKey, TRecord>(string collectionName, CancellationToken cancellationToken = default)
+        public async Task<bool> DeleteCollection<TKey, TRecord>(string collectionName, CancellationToken cancellationToken = default)
             where TKey : notnull
             where TRecord : class
         {
-            throw new NotImplementedException();
+            try
+            {
+                VectorStoreCollection<TKey, TRecord> collection = this.GetCollection<TKey, TRecord>(typeof(TRecord).Name);
+                await collection.EnsureCollectionDeletedAsync(cancellationToken);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex, "Failed to delete collection for {RecordType}", typeof(TRecord).Name);
+            }
+            return false;
         }
     }
 }
