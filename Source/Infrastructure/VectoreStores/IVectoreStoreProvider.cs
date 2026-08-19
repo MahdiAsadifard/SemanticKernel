@@ -20,7 +20,7 @@ namespace Infrastructure.VectoreStores
             where TKey : notnull
             where TRecord : class;
 
-        Task DeleteCollection<TKey, TRecord>(string collectionName, CancellationToken cancellationToken = default)
+        Task<bool> DeleteCollection<TKey, TRecord>(string collectionName, CancellationToken cancellationToken = default)
             where TKey : notnull
             where TRecord : class;
 
